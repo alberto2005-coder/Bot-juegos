@@ -1,94 +1,193 @@
+# Bot de minijuegos para Discord
 
-# 🤖 Bot de Minijuegos Interactivos para Discord
+[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![discord.py](https://img.shields.io/badge/discord.py-2.6%2B-5865F2?logo=discord&logoColor=white)](https://discordpy.readthedocs.io/)
+[![MIT](https://img.shields.io/badge/Licencia-MIT-green)](LICENSE)
 
-Un bot de Discord completo, moderno y completamente en español enfocado en entretenimiento y minijuegos interactivos. Desarrollado en Python, aprovecha al máximo la API de interacciones de Discord utilizando botones, menús desplegables (*Selects*) y ventanas emergentes (*Modals*).
-
----
-
-## 🎮 Minijuegos Incluidos
-
-### 1. ❌ Tres en Raya (`/tictactoe`)
-* **Modo Un Jugador:** Enfréntate a una Inteligencia Artificial con estrategia de bloqueo y ataque automática.
-* **Modo Dos Jugadores:** Reta a cualquier miembro del servidor mencionándolo en el comando.
-* **Interfaz:** Tablero dinámico renderizado 100% con botones de Discord que cambian de color según el símbolo (Rojo para ❌ y Verde para ⭕).
-
-### 2. 🤔 Adivina el Número (`/adivinar`)
-* El bot piensa un número aleatorio entre 1 y 50.
-* Tienes un máximo de 7 intentos para adivinarlo.
-* **Mecánica interactiva:** Utiliza los **Modals (ventanas de texto nativas de Discord)** para enviar tus intentos de forma privada y limpia, evitando saturar el chat de texto.
-
-### 3. 🤺 Duelo de Insultos (`/duelo`)
-* Inspirado en los clásicos duelos de piratas del mítico *Monkey Island*. ¡Reta a otro miembro a una batalla de ingenio!
-* Cada jugador inicia con 3 puntos de vida (❤️).
-* El atacante debe responder de forma brillante seleccionando la réplica correcta desde un menú desplegable antes de que expire el tiempo. El que falle, pierde una vida.
+[Español](#español) · [English](#english)
 
 ---
 
-## ✨ Características Técnicas
+## Español
 
-* **Comandos de Barra Diagonal (Slash Commands):** Sincronización automática de comandos globales usando `bot.tree.sync()`.
-* **Componentes UI Modernos:** Uso eficiente de `discord.ui.View`, `discord.ui.Button`, `discord.ui.Select` y `discord.ui.Modal`.
-* **Estructura Robusta:** Sistema centralizado de control de errores mediante `@bot.tree.error` y logs integrados con la librería `logging` de Python para monitorear partidas y capturar excepciones de forma limpia.
-* **Control de Inactividad:** Sistema de `on_timeout` para deshabilitar automáticamente los tableros y menús si los jugadores dejan una partida colgada, editando el mensaje para reflejar que el juego expiró.
+### Índice
 
----
+- [Descripción](#descripción)
+- [Minijuegos](#minijuegos)
+- [Características técnicas](#características-técnicas)
+- [Requisitos](#requisitos)
+- [Instalación](#instalación)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Licencia](#licencia)
 
-## 📂 Estructura del Proyecto
+### Descripción
 
-```text
-BOT-MINIJUEGOS/
-│── main.py            # Archivo principal con la lógica del bot y los 3 juegos
-│── config.py          # Almacenamiento seguro del Token de Discord (excluido en .gitignore)
-│── log_setup.py       # Configuración y formateo del sistema de logs
-│── README.md          # Documentación del proyecto
-└── LICENSE            # Licencia de código abierto
+Bot de Discord en **Python** centrado en entretenimiento y minijuegos interactivos. Aprovecha la API de interacciones al completo: **slash commands**, botones, menús desplegables y ventanas modales, de modo que casi todo se juega sin escribir en el chat.
 
-```
+### Minijuegos
 
----
+| Comando | Juego | Cómo funciona |
+|---|---|---|
+| `/tictactoe` | Tres en raya | Contra la IA o contra otro miembro mencionado. El tablero son botones que se colorean según el símbolo. |
+| `/adivinar` | Adivina el número | El bot piensa un número del 1 al 50 y tienes 7 intentos; cada intento se envía por un **modal** privado. |
+| `/duelo` | Duelo de insultos | Duelo por turnos con 3 puntos de vida: hay que elegir la réplica correcta en el menú antes de que acabe el tiempo. |
 
-## 🚀 Instalación y Configuración
+**Detalles de diseño**
 
-### 1. Clonar el repositorio
+- **Tres en raya**: la IA prioriza ganar, después bloquear, y elige el resto por heurística de centro y esquinas.
+- **Adivinar**: el modal evita llenar el canal de mensajes y mantiene cada intento privado.
+- **Duelo**: cada fallo o tiempo agotado resta una vida; gana quien deje al rival a cero.
+
+### Características técnicas
+
+- **Slash commands** sincronizados automáticamente con `bot.tree.sync()`.
+- **Componentes de UI**: `discord.ui.View`, `Button`, `Select` y `Modal`.
+- **Errores centralizados** con `@bot.tree.error` y trazas limpias en el log.
+- **Control de inactividad**: los tableros y menús se desactivan solos con `on_timeout` y el mensaje se edita para indicar que la partida expiró.
+- **Logs** con la librería estándar `logging`, separados en su propio módulo.
+
+### Requisitos
+
+- **Python 3.8 o superior**.
+- **discord.py 2.6.3+** (necesario para componentes y `app_commands`).
+- Una aplicación de bot en el [Discord Developer Portal](https://discord.com/developers/applications) con el token a mano.
+- Permisos de **applications.commands** y **bot** al invitar el bot al servidor.
+
+### Instalación
 
 ```bash
-git clone [https://github.com/alberto2005-coder/Nombre-De-Tu-Repositorio.git](https://github.com/alberto2005-coder/Nombre-De-Tu-Repositorio.git)
-cd Nombre-De-Tu-Repositorio
+git clone https://github.com/alberto2005-coder/Bot-juegos.git
+cd Bot-juegos
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
 
+pip install -U discord.py
 ```
 
-### 2. Configurar las credenciales
-
-Crea un archivo llamado `config.py` en la raíz del proyecto y añade tu Token de Discord obtenido en el [Discord Developer Portal](https://discord.com/developers/applications/):
+Crea `config.py` en la raíz con tu token:
 
 ```python
-DISCORD_TOKEN = "TU_TOKEN_SECRETO_AQUÍ"
-
+DISCORD_TOKEN = "TU_TOKEN_AQUI"
 ```
 
-### 3. Lanzar el bot
-
-Asegúrate de tener instalada la librería `discord.py` y ejecuta el archivo principal:
+Y arranca el bot:
 
 ```bash
 python main.py
-
 ```
+
+> [!IMPORTANT]
+> `config.py` está en `.gitignore` precisamente para que el token no acabe en el repositorio. No lo subas ni lo compartas: si se filtra, regenera el token en el portal.
+
+Los comandos globales pueden tardar hasta una hora en propagarse la primera vez; para probar en un servidor concreto, sincroniza en el guild desde el propio código.
+
+### Estructura del proyecto
+
+```text
+Bot-juegos/
+├── main.py          # Bot, vistas y lógica de los tres juegos
+├── config.py        # Token de Discord (excluido de git)
+├── log_setup.py     # Configuración y formato de logs
+├── LICENSE
+└── README.md
+```
+
+### Licencia
+
+**MIT** — consulta [LICENSE](LICENSE).
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## English
 
-* **Python 3.8+**
-* **discord.py 2.6.3+** (con soporte completo para componentes de UI y Slash Commands)
-* **Logging** (Librería estándar de control de registros de Python)
+### Table of contents
 
----
+- [Overview](#overview)
+- [Minigames](#minigames)
+- [Technical highlights](#technical-highlights)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Project structure](#project-structure)
+- [License](#license)
 
-## 📜 Licencia
+### Overview
 
-Este proyecto se distribuye bajo la Licencia MIT. Consulta el archivo `LICENSE` para más información.
+A **Python** Discord bot focused on entertainment and interactive minigames. It leans on the interaction API end to end: **slash commands**, buttons, select menus and modals, so almost everything is played without typing in chat.
 
+### Minigames
+
+| Command | Game | How it works |
+|---|---|---|
+| `/tictactoe` | Tic-tac-toe | Against the AI or a mentioned member. The board is made of buttons that recolour per symbol. |
+| `/adivinar` | Guess the number | The bot picks 1–50 and you get 7 attempts; each guess is sent through a private **modal**. |
+| `/duelo` | Insult duel | Turn-based duel with 3 lives: pick the right comeback from the menu before the timer runs out. |
+
+**Design notes**
+
+- **Tic-tac-toe**: the AI wins when it can, blocks when it must, and otherwise scores centre and corners.
+- **Guess the number**: the modal keeps the channel clean and every guess private.
+- **Duel**: a wrong answer or a timeout costs a life; the last player standing wins.
+
+### Technical highlights
+
+- **Slash commands** synced automatically with `bot.tree.sync()`.
+- **UI components**: `discord.ui.View`, `Button`, `Select` and `Modal`.
+- **Centralised errors** through `@bot.tree.error` with clean log traces.
+- **Idle handling**: boards and menus disable themselves via `on_timeout` and the message is edited to show the game expired.
+- **Logging** with the standard `logging` module, kept in its own file.
+
+### Requirements
+
+- **Python 3.8 or later**.
+- **discord.py 2.6.3+** (required for components and `app_commands`).
+- A bot application in the [Discord Developer Portal](https://discord.com/developers/applications) with its token at hand.
+- **applications.commands** and **bot** scopes when inviting the bot.
+
+### Installation
+
+```bash
+git clone https://github.com/alberto2005-coder/Bot-juegos.git
+cd Bot-juegos
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
+
+pip install -U discord.py
 ```
 
+Create `config.py` in the project root with your token:
+
+```python
+DISCORD_TOKEN = "YOUR_TOKEN_HERE"
 ```
+
+Then start the bot:
+
+```bash
+python main.py
+```
+
+> [!IMPORTANT]
+> `config.py` is git-ignored precisely so the token never lands in the repository. Never commit or share it: if it leaks, regenerate the token in the portal.
+
+Global commands can take up to an hour to propagate the first time; to test in a single server, sync to that guild from the code.
+
+### Project structure
+
+```text
+Bot-juegos/
+├── main.py          # Bot, views and the three games
+├── config.py        # Discord token (git-ignored)
+├── log_setup.py     # Logging configuration and format
+├── LICENSE
+└── README.md
+```
+
+### License
+
+**MIT** — see [LICENSE](LICENSE).
